@@ -1,0 +1,69 @@
+#!/bin/bash
+# Supervisor Config Copy Script
+# This script securely copies supervisor configuration files from Laravel's
+# local directory to the system supervisor directory with proper permissions.
+#
+# Usage: sudo /usr/local/bin/supervisor-copy <source-file>
+#
+# The script will:
+# 1. Copy the config file to the supervisor directory
+# 2. Run supervisorctl reread to reload configurations
+# 3. Run supervisorctl update to apply changes
+
+set -e
+
+# Validate arguments
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <source-config-file>" >&2
+    exit 1
+fi
+
+SRC="$1"
+
+# Validate source file exists
+if [ ! -f "$SRC" ]; then
+    echo "Error: Source file '$SRC' does not exist" >&2
+    exit 1
+fi
+
+# Determine supervisor config directory (adjust for your system)
+# Common paths: /etc/supervisor/conf.d, /opt/homebrew/etc/supervisor.d
+if [ -d "/opt/homebrew/etc/supervisor.d" ]; then
+    SUPERVISOR_CONF_DIR="/opt/homebrew/etc/supervisor.d"
+elif [ -d "/etc/supervisor/conf.d" ]; then
+    SUPERVISOR_CONF_DIR="/etc/supervisor/conf.d"
+else
+    echo "Error: Supervisor config directory not found" >&2
+    exit 1
+fi
+
+# Determine supervisorctl path
+if command -v /opt/homebrew/bin/supervisorctl &> /dev/null; then
+    SUPERVISORCTL="/opt/homebrew/bin/supervisorctl"
+elif command -v /usr/bin/supervisorctl &> /dev/null; then
+    SUPERVISORCTL="/usr/bin/supervisorctl"
+elif command -v supervisorctl &> /dev/null; then
+    SUPERVISORCTL="supervisorctl"
+else
+    echo "Error: supervisorctl not found" >&2
+    exit 1
+fi
+
+DST="${SUPERVISOR_CONF_DIR}/$(basename "$SRC")"
+
+# Copy the configuration file
+echo "Copying $SRC to $DST..."
+cp "$SRC" "$DST"
+
+# Set appropriate permissions
+chmod 644 "$DST"
+
+# Reload supervisor configuration
+echo "Reloading supervisor configuration..."
+$SUPERVISORCTL reread
+
+# Apply updates
+echo "Applying supervisor updates..."
+$SUPERVISORCTL update
+
+echo "Successfully deployed $(basename "$SRC")"
