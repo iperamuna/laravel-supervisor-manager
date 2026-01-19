@@ -54,16 +54,97 @@ password=strongpass
 
 > **⚠️ Security Warning**: Only bind to `127.0.0.1` to prevent external access. This interface gives full control over your processes.
 
-### 2. Permissions (Optional)
-If you wish to use the **"Deploy"** feature (which runs `supervisorctl reread` and `supervisorctl update`), the user running your Laravel app (e.g., `www-data`) needs sudo privileges for `supervisorctl`.
+### 2. Secure File Copy Setup (Recommended)
 
-Run `sudo visudo` and add:
+The package uses a **secure architecture** to handle supervisor configuration files:
+
+#### How It Works
 
 ```
-www-data ALL=(root) NOPASSWD: /usr/bin/supervisorctl *
+Laravel writes here (your project):
+storage/supervisors/laravel-queue.conf
+         ↓
+Laravel calls secure script with sudo:
+sudo /usr/local/bin/supervisor-copy <file>
+         ↓
+Script copies to system directory:
+/opt/homebrew/etc/supervisor.d/laravel-queue.conf
+         ↓
+Script runs: supervisorctl reread && supervisorctl update
 ```
 
-(Replace `www-data` with your web server user if different).
+**Why This Approach?**
+- ✅ Laravel never needs write access to system directories
+- ✅ Controlled sudo access to a single, auditable script
+- ✅ Automatic reread/update after deployment
+- ✅ Works on macOS (Homebrew) and Linux systems
+
+#### Automated Setup
+
+Run the included setup script:
+
+```bash
+cd vendor/iperamuna/supervisor-manager/scripts
+bash setup-secure-copy.sh
+```
+
+This will:
+1. Install the copy script to `/usr/local/bin/supervisor-copy`
+2. Guide you through sudoers configuration
+3. Test the setup automatically
+
+#### Manual Setup
+
+If you prefer manual installation:
+
+**Step 1:** Install the copy script
+
+```bash
+sudo cp vendor/iperamuna/supervisor-manager/scripts/supervisor-copy /usr/local/bin/
+sudo chmod +x /usr/local/bin/supervisor-copy
+```
+
+**Step 2:** Configure sudoers
+
+```bash
+sudo visudo
+```
+
+Add this line (replace `your-username` with your actual user):
+
+```
+your-username ALL=(root) NOPASSWD: /usr/local/bin/supervisor-copy *
+```
+
+For **Laravel Herd** on macOS, use your Mac username:
+```
+iperamuna ALL=(root) NOPASSWD: /usr/local/bin/supervisor-copy *
+```
+
+For **production servers**, use your web server user:
+```
+www-data ALL=(root) NOPASSWD: /usr/local/bin/supervisor-copy *
+```
+
+**Step 3:** Update your `.env`
+
+```env
+SUPERVISOR_SYSTEM_USER=your-username
+SUPERVISOR_CONF_PATH=/opt/homebrew/etc/supervisor.d  # or /etc/supervisor/conf.d
+SUPERVISOR_USE_SECURE_COPY=true
+SUPERVISOR_LOCAL_DIR=/path/to/your/project/supervisors
+```
+
+#### Legacy Mode (Not Recommended)
+
+If you can't use the secure copy script, you can disable it:
+
+```env
+SUPERVISOR_USE_SECURE_COPY=false
+```
+
+**Note**: This requires your web server user to have write permissions to the supervisor directory, which is a security risk.
+
 
 ## 🛡️ Access Control
 
