@@ -3,6 +3,8 @@
 namespace Iperamuna\SupervisorManager\Services;
 
 use Illuminate\Support\Facades\File;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class SupervisorConfigService
 {
@@ -19,7 +21,7 @@ class SupervisorConfigService
     public function listConfigs(): array
     {
         // Ensure local directory exists
-        if (! File::exists($this->localPath)) {
+        if (!File::exists($this->localPath)) {
             File::makeDirectory($this->localPath, 0755, true);
         }
 
@@ -28,7 +30,7 @@ class SupervisorConfigService
 
         // Also check system path for files that might be orphans or just synced
         $systemFiles = File::exists($this->systemPath) ? File::files($this->systemPath) : [];
-        $systemFileNames = array_map(fn ($f) => $f->getFilename(), $systemFiles);
+        $systemFileNames = array_map(fn($f) => $f->getFilename(), $systemFiles);
 
         $configs = [];
 
@@ -45,12 +47,12 @@ class SupervisorConfigService
                     ], $data);
 
                     // Check status against system
-                    if (! in_array($filename, $systemFileNames)) {
+                    if (!in_array($filename, $systemFileNames)) {
                         $item['status'] = 'new'; // Exists locally, not in system
                     } else {
                         // Compare content
                         $localContent = File::get($file->getPathname());
-                        $systemContent = File::get($this->systemPath.'/'.$filename);
+                        $systemContent = File::get($this->systemPath . '/' . $filename);
 
                         // Simple content comparison (could be improved by normalizing whitespace/lines)
                         if (trim($localContent) === trim($systemContent)) {
@@ -69,7 +71,7 @@ class SupervisorConfigService
         foreach ($systemFiles as $file) {
             $filename = $file->getFilename();
             // Skip if already processed (exists locally)
-            if (File::exists($this->localPath.'/'.$filename)) {
+            if (File::exists($this->localPath . '/' . $filename)) {
                 continue;
             }
 
@@ -92,11 +94,11 @@ class SupervisorConfigService
     // Reads config from LOCAL path for editing, fallback to SYSTEM if orphan
     public function getConfig(string $filename): ?array
     {
-        $path = $this->localPath.'/'.$filename;
-        if (! File::exists($path)) {
+        $path = $this->localPath . '/' . $filename;
+        if (!File::exists($path)) {
             // Check system path (orphan)
-            $path = $this->systemPath.'/'.$filename;
-            if (! File::exists($path)) {
+            $path = $this->systemPath . '/' . $filename;
+            if (!File::exists($path)) {
                 return null;
             }
         }
@@ -110,28 +112,81 @@ class SupervisorConfigService
         $content = $this->buildConfigContent($data);
 
         // Ensure directory exists
-        if (! File::exists($this->localPath)) {
+        if (!File::exists($this->localPath)) {
             File::makeDirectory($this->localPath, 0755, true);
         }
 
-        return File::put($this->localPath.'/'.$filename, $content) !== false;
+        return File::put($this->localPath . '/' . $filename, $content) !== false;
     }
 
-    // Syncs a specific file from Local to System
+    // Syncs a specific file from Local to System using secure copy script
     public function syncToSystem(string $filename): bool
     {
-        $localFile = $this->localPath.'/'.$filename;
-        $systemFile = $this->systemPath.'/'.$filename;
+        $localFile = $this->localPath . '/' . $filename;
 
-        if (! File::exists($localFile)) {
-            return false;
+        if (!File::exists($localFile)) {
+            throw new \RuntimeException("Local configuration file not found: {$localFile}");
         }
 
-        if (! File::exists($this->systemPath)) {
-            File::makeDirectory($this->systemPath, 0755, true); // Attempt to create system dir if missing
+        $useSecureCopy = config('supervisor-manager.use_secure_copy', true);
+
+        if ($useSecureCopy) {
+            return $this->secureCopyToSystem($localFile);
+        } else {
+            return $this->directCopyToSystem($localFile, $filename);
+        }
+    }
+
+    /**
+     * Copy file to system using secure sudo script (recommended for production)
+     */
+    protected function secureCopyToSystem(string $localFile): bool
+    {
+        $copyScriptPath = config('supervisor-manager.copy_script_path', '/usr/local/bin/supervisor-copy');
+
+        if (!file_exists($copyScriptPath)) {
+            throw new \RuntimeException(
+                "Secure copy script not found at: {$copyScriptPath}\n" .
+                "Please run the installation guide to set up the copy script."
+            );
         }
 
-        return File::copy($localFile, $systemFile);
+        try {
+            $process = Process::fromShellCommandline(
+                'sudo ' . escapeshellarg($copyScriptPath) . ' ' . escapeshellarg($localFile)
+            );
+
+            $process->setTimeout(30);
+            $process->mustRun();
+
+            return true;
+        } catch (ProcessFailedException $exception) {
+            throw new \RuntimeException(
+                "Failed to copy configuration using secure script:\n" .
+                $exception->getMessage()
+            );
+        }
+    }
+
+    /**
+     * Direct copy to system directory (legacy mode, requires write permissions)
+     */
+    protected function directCopyToSystem(string $localFile, string $filename): bool
+    {
+        $systemFile = $this->systemPath . '/' . $filename;
+
+        if (!File::exists($this->systemPath)) {
+            File::makeDirectory($this->systemPath, 0755, true);
+        }
+
+        if (!File::copy($localFile, $systemFile)) {
+            throw new \RuntimeException("Failed to copy file to system directory: {$systemFile}");
+        }
+
+        // Run supervisorctl commands
+        $this->deployChanges();
+
+        return true;
     }
 
     // Runs supervisor update sequence
@@ -172,7 +227,7 @@ class SupervisorConfigService
 
     protected function buildConfigContent(array $data): string
     {
-        $sectionName = 'program:'.($data['program'] ?? 'unknown');
+        $sectionName = 'program:' . ($data['program'] ?? 'unknown');
 
         $lines = [];
         $lines[] = "[$sectionName]";
