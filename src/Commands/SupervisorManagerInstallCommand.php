@@ -85,8 +85,8 @@ class SupervisorManagerInstallCommand extends Command
         info("
 Example:
 
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
+use Filament\\Models\\Contracts\\FilamentUser;
+use Filament\\Panel;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -96,6 +96,44 @@ class User extends Authenticatable implements FilamentUser
     }
 }
 ");
+
+        // Secure Copy Setup Guide
+        $this->newLine(2);
+        \Laravel\Prompts\info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        \Laravel\Prompts\info('📦 SECURE COPY SETUP (Required for Production)');
+        \Laravel\Prompts\info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->newLine();
+
+        // Detect system user
+        $systemUser = 'www-data'; // default
+        if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
+            $systemUser = posix_getpwuid(posix_geteuid())['name'] ?? 'www-data';
+        }
+        \Laravel\Prompts\info("Detected system user: {$systemUser}");
+        $this->newLine();
+
+        \Laravel\Prompts\info('To securely deploy supervisor configs, run the setup script:');
+        $this->newLine();
+        $this->line('  <fg=green>cd vendor/iperamuna/supervisor-manager/scripts</>');
+        $this->line('  <fg=green>bash setup-secure-copy.sh</>');
+        $this->newLine();
+
+        \Laravel\Prompts\info('Or manually:');
+        $this->newLine();
+        $this->line('  <fg=yellow>1. Install the copy script:</>');
+        $this->line('     sudo cp vendor/iperamuna/supervisor-manager/scripts/supervisor-copy /usr/local/bin/');
+        $this->line('     sudo chmod +x /usr/local/bin/supervisor-copy');
+        $this->newLine();
+        $this->line('  <fg=yellow>2. Configure sudoers (sudo visudo):</>');
+        $this->line("     {$systemUser} ALL=(root) NOPASSWD: /usr/local/bin/supervisor-copy *");
+        $this->newLine();
+        $this->line('  <fg=yellow>3. Update your .env:</>');
+        $this->line("     SUPERVISOR_SYSTEM_USER={$systemUser}");
+        $this->line('     SUPERVISOR_USE_SECURE_COPY=true');
+        $this->newLine();
+
+        \Laravel\Prompts\info('For detailed instructions, see: README.md');
+        \Laravel\Prompts\info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
         return self::SUCCESS;
     }
