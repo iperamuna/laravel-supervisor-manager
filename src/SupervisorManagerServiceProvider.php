@@ -47,6 +47,8 @@ class SupervisorManagerServiceProvider extends ServiceProvider
         \Livewire\Livewire::component('supervisor-manager::process-list', Livewire\ProcessList::class);
         \Livewire\Livewire::component('supervisor-manager::configuration-list', Livewire\ConfigurationList::class);
         \Livewire\Livewire::component('supervisor-manager::log-viewer', Livewire\LogViewer::class);
+        \Livewire\Livewire::component('supervisor-manager::redis-details', Livewire\RedisDetails::class);
+        \Livewire\Livewire::component('supervisor-manager::redis-content', Livewire\RedisContent::class);
 
         $userModel = config('supervisor-manager.user_model');
         if ($userModel && class_exists($userModel) && !in_array(\Filament\Models\Contracts\FilamentUser::class, class_implements($userModel))) {
