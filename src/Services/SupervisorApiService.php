@@ -24,7 +24,7 @@ class SupervisorApiService
         $username = config('supervisor-manager.username');
         $password = config('supervisor-manager.password');
 
-        $baseUrl = rtrim($url, '/') . ':' . $port . '/RPC2';
+        $baseUrl = rtrim($url, '/').':'.$port.'/RPC2';
 
         $this->client = new Client([
             'base_uri' => $baseUrl,
@@ -139,8 +139,8 @@ class SupervisorApiService
             return $this->decodeResponse($body);
 
         } catch (GuzzleException $e) {
-            Log::error('Supervisor API Error: ' . $e->getMessage());
-            throw new Exception("Failed to connect to Supervisor at {$this->client->getConfig('base_uri')}: " . $e->getMessage());
+            Log::error('Supervisor API Error: '.$e->getMessage());
+            throw new Exception("Failed to connect to Supervisor at {$this->client->getConfig('base_uri')}: ".$e->getMessage());
         }
     }
 
@@ -148,12 +148,12 @@ class SupervisorApiService
     {
         $xml = '<?xml version="1.0"?>';
         $xml .= '<methodCall>';
-        $xml .= '<methodName>' . htmlspecialchars($method) . '</methodName>';
+        $xml .= '<methodName>'.htmlspecialchars($method).'</methodName>';
 
-        if (!empty($params)) {
+        if (! empty($params)) {
             $xml .= '<params>';
             foreach ($params as $param) {
-                $xml .= '<param><value>' . $this->encodeValue($param) . '</value></param>';
+                $xml .= '<param><value>'.$this->encodeValue($param).'</value></param>';
             }
             $xml .= '</params>';
         }
@@ -166,26 +166,26 @@ class SupervisorApiService
     protected function encodeValue(mixed $value): string
     {
         if (is_int($value)) {
-            return '<int>' . $value . '</int>';
+            return '<int>'.$value.'</int>';
         } elseif (is_bool($value)) {
-            return '<boolean>' . ($value ? '1' : '0') . '</boolean>';
+            return '<boolean>'.($value ? '1' : '0').'</boolean>';
         } elseif (is_string($value)) {
-            return '<string>' . htmlspecialchars($value) . '</string>';
+            return '<string>'.htmlspecialchars($value).'</string>';
         } elseif (is_array($value)) {
             // Check if associative array (struct) or indexed array (array)
-            if (array_keys($value) !== range(0, count($value) - 1) && !empty($value)) {
+            if (array_keys($value) !== range(0, count($value) - 1) && ! empty($value)) {
                 $xml = '<struct>';
                 foreach ($value as $key => $val) {
                     $xml .= '<member>';
-                    $xml .= '<name>' . htmlspecialchars($key) . '</name>';
-                    $xml .= '<value>' . $this->encodeValue($val) . '</value>';
+                    $xml .= '<name>'.htmlspecialchars($key).'</name>';
+                    $xml .= '<value>'.$this->encodeValue($val).'</value>';
                     $xml .= '</member>';
                 }
                 $xml .= '</struct>';
             } else {
                 $xml = '<array><data>';
                 foreach ($value as $val) {
-                    $xml .= '<value>' . $this->encodeValue($val) . '</value>';
+                    $xml .= '<value>'.$this->encodeValue($val).'</value>';
                 }
                 $xml .= '</data></array>';
             }
@@ -193,7 +193,7 @@ class SupervisorApiService
             return $xml;
         }
 
-        return '<string>' . htmlspecialchars((string) $value) . '</string>';
+        return '<string>'.htmlspecialchars((string) $value).'</string>';
     }
 
     protected function decodeResponse(string $xml): mixed
@@ -207,7 +207,7 @@ class SupervisorApiService
         // Check for faults
         if (isset($xmlElement->fault)) {
             $fault = $this->decodeValue($xmlElement->fault->value);
-            throw new Exception('Supervisor Fault: ' . ($fault['faultString'] ?? 'Unknown error') . ' (Code: ' . ($fault['faultCode'] ?? 'N/A') . ')');
+            throw new Exception('Supervisor Fault: '.($fault['faultString'] ?? 'Unknown error').' (Code: '.($fault['faultCode'] ?? 'N/A').')');
         }
 
         if (isset($xmlElement->params->param->value)) {

@@ -5,11 +5,11 @@ use Illuminate\Support\Facades\File;
 use Iperamuna\LaravelSupervisorManager\Services\SupervisorConfigService;
 
 beforeEach(function () {
-    $this->tempDir = sys_get_temp_dir() . '/supervisor_mgr_test_' . uniqid();
+    $this->tempDir = sys_get_temp_dir().'/supervisor_mgr_test_'.uniqid();
     File::makeDirectory($this->tempDir);
     Config::set('supervisor-manager.supervisors_dir', $this->tempDir);
-    Config::set('supervisor-manager.conf_path', $this->tempDir . '/system'); // Mock system path too
-    File::makeDirectory($this->tempDir . '/system');
+    Config::set('supervisor-manager.conf_path', $this->tempDir.'/system'); // Mock system path too
+    File::makeDirectory($this->tempDir.'/system');
 });
 
 afterEach(function () {
@@ -29,7 +29,7 @@ redirect_stderr=true
 stdout_logfile=/home/forge/app.com/storage/logs/horizon.log
 INI;
 
-    $filePath = $this->tempDir . '/test-worker.conf';
+    $filePath = $this->tempDir.'/test-worker.conf';
     file_put_contents($filePath, $content);
 
     $service = new SupervisorConfigService;
@@ -47,7 +47,7 @@ INI;
 
 it('can list configurations with correct status', function () {
     $content = "[program:worker]\ncommand=php artisan work";
-    file_put_contents($this->tempDir . '/worker.conf', $content);
+    file_put_contents($this->tempDir.'/worker.conf', $content);
 
     $service = new SupervisorConfigService;
     $configs = $service->listConfigs();
@@ -73,9 +73,9 @@ it('can build configuration content correctly', function () {
     $result = $service->saveConfig('test-queue.conf', $data);
 
     expect($result)->toBeTrue()
-        ->and(File::exists($this->tempDir . '/test-queue.conf'))->toBeTrue();
+        ->and(File::exists($this->tempDir.'/test-queue.conf'))->toBeTrue();
 
-    $content = File::get($this->tempDir . '/test-queue.conf');
+    $content = File::get($this->tempDir.'/test-queue.conf');
     expect($content)->toContain('[program:test-queue]')
         ->toContain('command=php artisan queue:work')
         ->toContain('autostart=true')
@@ -86,7 +86,7 @@ it('uses legacy copy mode when secure copy is disabled', function () {
     Config::set('supervisor-manager.use_secure_copy', false);
 
     $content = "[program:legacy]\ncommand=php artisan test";
-    file_put_contents($this->tempDir . '/legacy.conf', $content);
+    file_put_contents($this->tempDir.'/legacy.conf', $content);
 
     $service = new SupervisorConfigService;
 
@@ -95,7 +95,7 @@ it('uses legacy copy mode when secure copy is disabled', function () {
     $result = $service->syncToSystem('legacy.conf');
 
     expect($result)->toBeTrue()
-        ->and(File::exists($this->tempDir . '/system/legacy.conf'))->toBeTrue();
+        ->and(File::exists($this->tempDir.'/system/legacy.conf'))->toBeTrue();
 });
 
 it('requires secure copy script when secure mode is enabled', function () {
@@ -103,19 +103,18 @@ it('requires secure copy script when secure mode is enabled', function () {
     Config::set('supervisor-manager.copy_script_path', '/nonexistent/path/supervisor-copy');
 
     $content = "[program:secure]\ncommand=php artisan test";
-    file_put_contents($this->tempDir . '/secure.conf', $content);
+    file_put_contents($this->tempDir.'/secure.conf', $content);
 
     $service = new SupervisorConfigService;
 
     // Should throw exception when copy script not found
-    expect(fn() => $service->syncToSystem('secure.conf'))
+    expect(fn () => $service->syncToSystem('secure.conf'))
         ->toThrow(RuntimeException::class, 'Secure copy script not found');
 });
 
 it('throws exception when local file does not exist', function () {
     $service = new SupervisorConfigService;
 
-    expect(fn() => $service->syncToSystem('nonexistent.conf'))
+    expect(fn () => $service->syncToSystem('nonexistent.conf'))
         ->toThrow(RuntimeException::class, 'Local configuration file not found');
 });
-

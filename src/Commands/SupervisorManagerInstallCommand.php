@@ -68,7 +68,7 @@ class SupervisorManagerInstallCommand extends Command
             $userModel = config('supervisor-manager.user_model');
             if ($userModel && class_exists($userModel)) {
                 $name = text(label: 'Name', required: true);
-                $email = text(label: 'Email', required: true, validate: fn($email) => filter_var($email, FILTER_VALIDATE_EMAIL) ? null : 'Invalid email');
+                $email = text(label: 'Email', required: true, validate: fn ($email) => filter_var($email, FILTER_VALIDATE_EMAIL) ? null : 'Invalid email');
                 $UserPassword = \Laravel\Prompts\password(label: 'Password', required: true);
 
                 try {
@@ -79,7 +79,7 @@ class SupervisorManagerInstallCommand extends Command
                     ]);
                     info("User '{$user->email}' created successfully.");
                 } catch (\Exception $e) {
-                    \Laravel\Prompts\error("Failed to create user: " . $e->getMessage());
+                    \Laravel\Prompts\error('Failed to create user: '.$e->getMessage());
                 }
             } else {
                 \Laravel\Prompts\warning("Configured User model ($userModel) not found. Skipping user creation.");
@@ -147,7 +147,7 @@ class User extends Authenticatable implements FilamentUser
     {
         $envPath = base_path('.env');
 
-        if (!file_exists($envPath)) {
+        if (! file_exists($envPath)) {
             return;
         }
 
@@ -156,10 +156,10 @@ class User extends Authenticatable implements FilamentUser
         foreach ($data as $key => $value) {
             // encapsulate string values with quotes if they contain spaces
             if (preg_match('/\s/', $value)) {
-                $value = '"' . $value . '"';
+                $value = '"'.$value.'"';
             }
 
-            if (str_contains($envContent, $key . '=')) {
+            if (str_contains($envContent, $key.'=')) {
                 $envContent = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $envContent);
             } else {
                 $envContent .= "\n{$key}={$value}";
@@ -173,7 +173,7 @@ class User extends Authenticatable implements FilamentUser
     {
         $cssPath = resource_path('css/app.css');
 
-        if (!file_exists($cssPath)) {
+        if (! file_exists($cssPath)) {
             return;
         }
 
@@ -181,8 +181,8 @@ class User extends Authenticatable implements FilamentUser
         // We use the vendor path as this command is intended for the distributed package users
         $sourceLine = "@source '../../vendor/iperamuna/laravel-supervisor-manager/resources/views/**/*.blade.php';";
 
-        if (!str_contains($css, 'iperamuna/laravel-supervisor-manager')) {
-            file_put_contents($cssPath, $css . "\n" . $sourceLine);
+        if (! str_contains($css, 'iperamuna/laravel-supervisor-manager')) {
+            file_put_contents($cssPath, $css."\n".$sourceLine);
             info('Added package views to tailwind source.');
         }
     }

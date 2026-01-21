@@ -104,7 +104,7 @@ class ConfigurationList extends Component implements HasActions, HasForms
                 try {
                     $service->syncToSystem($filename);
 
-                    //Check if using secure copy mode
+                    // Check if using secure copy mode
                     $useSecureCopy = config('supervisor-manager.use_secure_copy', true);
 
                     if ($useSecureCopy) {
@@ -155,7 +155,7 @@ class ConfigurationList extends Component implements HasActions, HasForms
                     /** @var SupervisorApiService $api */
                     $api = app(SupervisorApiService::class);
                     // Stop the group (program name is the group name)
-                    $api->stopProcess($program . ':*', true);
+                    $api->stopProcess($program.':*', true);
 
                     Notification::make()->title('Processes stopped successfully')->success()->send();
                 } catch (\Exception $e) {
@@ -179,7 +179,7 @@ class ConfigurationList extends Component implements HasActions, HasForms
                 try {
                     /** @var SupervisorApiService $api */
                     $api = app(SupervisorApiService::class);
-                    $api->startProcess($program . ':*', true);
+                    $api->startProcess($program.':*', true);
 
                     Notification::make()->title('Processes started successfully')->success()->send();
                 } catch (\Exception $e) {

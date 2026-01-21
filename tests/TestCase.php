@@ -16,6 +16,9 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
+            \Livewire\LivewireServiceProvider::class,
+            \Filament\FilamentServiceProvider::class,
+            \Filament\Support\SupportServiceProvider::class,
             SupervisorManagerServiceProvider::class,
             SupervisorPanelProvider::class,
         ];

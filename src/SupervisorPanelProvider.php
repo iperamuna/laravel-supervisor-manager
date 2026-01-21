@@ -29,19 +29,19 @@ class SupervisorPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Indigo,
             ])
-            ->discoverResources(in: __DIR__ . '/Filament/Resources', for: 'Iperamuna\\LaravelSupervisorManager\\Filament\\Resources')
-            ->discoverPages(in: __DIR__ . '/Filament/Pages', for: 'Iperamuna\\LaravelSupervisorManager\\Filament\\Pages')
+            ->discoverResources(in: __DIR__.'/Filament/Resources', for: 'Iperamuna\\LaravelSupervisorManager\\Filament\\Resources')
+            ->discoverPages(in: __DIR__.'/Filament/Pages', for: 'Iperamuna\\LaravelSupervisorManager\\Filament\\Pages')
             ->pages([
                 Filament\Pages\SupervisorDashboard::class,
             ])
-            ->discoverWidgets(in: __DIR__ . '/Filament/Widgets', for: 'Iperamuna\\LaravelSupervisorManager\\Filament\\Widgets')
+            ->discoverWidgets(in: __DIR__.'/Filament/Widgets', for: 'Iperamuna\\LaravelSupervisorManager\\Filament\\Widgets')
             ->widgets([
-                    // Widgets\AccountWidget::class,
+                // Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
             ->renderHook(
                 \Filament\View\PanelsRenderHook::USER_MENU_BEFORE,
-                fn(): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'supervisor-manager::supervisor-status\')')
+                fn (): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'supervisor-manager::supervisor-status\')')
             )
             ->middleware([
                 EncryptCookies::class,

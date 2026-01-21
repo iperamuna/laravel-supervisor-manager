@@ -14,7 +14,7 @@ it('installs the package and publishes config', function () {
     // So it's safe-ish, but let's be sure.
 
     $envPath = base_path('.env');
-    if (!File::exists($envPath)) {
+    if (! File::exists($envPath)) {
         File::put($envPath, "APP_NAME=Laravel\n");
     }
 
@@ -24,6 +24,7 @@ it('installs the package and publishes config', function () {
         ->expectsQuestion('What is the Supervisor Connection Port?', '9001')
         ->expectsQuestion('What is the Supervisor Connection Username?', 'admin')
         ->expectsQuestion('What is the Supervisor Connection Password?', 'secret')
+        ->expectsQuestion('Do you want to create a Supervisor Admin user?', 'no')
         ->assertExitCode(0);
 
     // Verify .env content
