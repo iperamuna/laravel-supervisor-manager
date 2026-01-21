@@ -27,7 +27,7 @@ A powerful **FilamentPHP** panel for managing **Supervisor** processes directly 
 You can install the package via composer:
 
 ```bash
-composer require iperamuna/supervisor-manager
+composer require iperamuna/laravel-supervisor-manager
 ```
 
 After installing, run the installation command to publish assets and configure the connection:
@@ -86,7 +86,7 @@ Script runs: supervisorctl reread && supervisorctl update
 Run the included setup script:
 
 ```bash
-cd vendor/iperamuna/supervisor-manager/scripts
+cd vendor/iperamuna/laravel-supervisor-manager/scripts
 bash setup-secure-copy.sh
 ```
 
@@ -102,7 +102,7 @@ If you prefer manual installation:
 **Step 1:** Install the copy script
 
 ```bash
-sudo cp vendor/iperamuna/supervisor-manager/scripts/supervisor-copy /usr/local/bin/
+sudo cp vendor/iperamuna/laravel-supervisor-manager/scripts/supervisor-copy /usr/local/bin/
 sudo chmod +x /usr/local/bin/supervisor-copy
 ```
 

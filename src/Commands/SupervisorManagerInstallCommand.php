@@ -114,14 +114,14 @@ class User extends Authenticatable implements FilamentUser
 
         \Laravel\Prompts\info('To securely deploy supervisor configs, run the setup script:');
         $this->newLine();
-        $this->line('  <fg=green>cd vendor/iperamuna/supervisor-manager/scripts</>');
+        $this->line('  <fg=green>cd vendor/iperamuna/laravel-supervisor-manager/scripts</>');
         $this->line('  <fg=green>bash setup-secure-copy.sh</>');
         $this->newLine();
 
         \Laravel\Prompts\info('Or manually:');
         $this->newLine();
         $this->line('  <fg=yellow>1. Install the copy script:</>');
-        $this->line('     sudo cp vendor/iperamuna/supervisor-manager/scripts/supervisor-copy /usr/local/bin/');
+        $this->line('     sudo cp vendor/iperamuna/laravel-supervisor-manager/scripts/supervisor-copy /usr/local/bin/');
         $this->line('     sudo chmod +x /usr/local/bin/supervisor-copy');
         $this->newLine();
         $this->line('  <fg=yellow>2. Configure sudoers (sudo visudo):</>');
@@ -174,9 +174,9 @@ class User extends Authenticatable implements FilamentUser
 
         $css = file_get_contents($cssPath);
         // We use the vendor path as this command is intended for the distributed package users
-        $sourceLine = "@source '../../vendor/iperamuna/supervisor-manager/resources/views/**/*.blade.php';";
+        $sourceLine = "@source '../../vendor/iperamuna/laravel-supervisor-manager/resources/views/**/*.blade.php';";
 
-        if (!str_contains($css, 'iperamuna/supervisor-manager')) {
+        if (!str_contains($css, 'iperamuna/laravel-supervisor-manager')) {
             file_put_contents($cssPath, $css . "\n" . $sourceLine);
             info('Added package views to tailwind source.');
         }

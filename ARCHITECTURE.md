@@ -129,7 +129,7 @@ SUPERVISOR_LOCAL_DIR=/path/to/project/supervisors    # Local dir
 
 ### Quick Setup (Automated)
 ```bash
-cd vendor/iperamuna/supervisor-manager/scripts
+cd vendor/iperamuna/laravel-supervisor-manager/scripts
 bash setup-secure-copy.sh
 ```
 
@@ -137,7 +137,7 @@ bash setup-secure-copy.sh
 
 **Step 1:** Install copy script
 ```bash
-sudo cp vendor/iperamuna/supervisor-manager/scripts/supervisor-copy /usr/local/bin/
+sudo cp vendor/iperamuna/laravel-supervisor-manager/scripts/supervisor-copy /usr/local/bin/
 sudo chmod +x /usr/local/bin/supervisor-copy
 ```
 

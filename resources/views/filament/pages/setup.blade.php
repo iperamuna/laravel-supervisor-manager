@@ -84,7 +84,7 @@ password=strongpass
             <div x-data="{ copied: false }" class="relative group mb-6">
                 <div
                     class="bg-gray-900 dark:bg-gray-950 p-4 rounded-lg font-mono text-xs text-gray-300 pr-10 space-y-1">
-                    <div x-ref="cmd1">cd vendor/iperamuna/supervisor-manager/scripts</div>
+                    <div x-ref="cmd1">cd vendor/iperamuna/laravel-supervisor-manager/scripts</div>
                     <div>bash setup-secure-copy.sh</div>
                 </div>
                 <button x-on:click="
@@ -108,7 +108,7 @@ password=strongpass
                     <strong>Install the copy script:</strong>
                     <div x-data="{ copied: false }" class="relative group mt-2">
                         <div class="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-xs pr-10 space-y-1">
-                            <div x-ref="cmd2">sudo cp vendor/iperamuna/supervisor-manager/scripts/supervisor-copy
+                            <div x-ref="cmd2">sudo cp vendor/iperamuna/laravel-supervisor-manager/scripts/supervisor-copy
                                 /usr/local/bin/</div>
                             <div>sudo chmod +x /usr/local/bin/supervisor-copy</div>
                         </div>
