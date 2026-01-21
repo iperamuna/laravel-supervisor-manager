@@ -183,31 +183,48 @@ class SupervisorConfigService
             throw new \RuntimeException("Failed to copy file to system directory: {$systemFile}");
         }
 
-        // Run supervisorctl commands
-        $this->deployChanges();
-
         return true;
     }
 
     // Runs supervisor update sequence
     public function deployChanges(): array
     {
-        // Executes supervisorctl update, reread, etc.
-        // Assuming we are on the same system and have permission
-        $output = [];
-        $returnVar = 0;
+        $allOutput = [];
+        $hasError = false;
 
-        exec('supervisorctl reread', $output, $returnVar);
-        exec('supervisorctl update', $output, $returnVar);
+        try {
+            // Run supervisorctl reread
+            $rereadProcess = Process::fromShellCommandline('supervisorctl reread');
+            $rereadProcess->setTimeout(30);
+            $rereadProcess->run();
 
-        // Optionally restart implies finding changed groups, but usually update handles adding/removing.
-        // If the user wants to ensure restart of existing modified groups that update doesn't trigger automatically (update only triggers if config changed significantly enough for supervisor to notice)
-        // For now, let's stick to reread + update which is standard for config changes.
+            $allOutput[] = $rereadProcess->getOutput();
+            if (!$rereadProcess->isSuccessful()) {
+                $allOutput[] = $rereadProcess->getErrorOutput();
+                $hasError = true;
+            }
 
-        return [
-            'exit_code' => $returnVar,
-            'output' => implode("\n", $output),
-        ];
+            // Run supervisorctl update
+            $updateProcess = Process::fromShellCommandline('supervisorctl update');
+            $updateProcess->setTimeout(30);
+            $updateProcess->run();
+
+            $allOutput[] = $updateProcess->getOutput();
+            if (!$updateProcess->isSuccessful()) {
+                $allOutput[] = $updateProcess->getErrorOutput();
+                $hasError = true;
+            }
+
+            return [
+                'exit_code' => $hasError ? 1 : 0,
+                'output' => trim(implode("\n", array_filter($allOutput))),
+            ];
+        } catch (ProcessFailedException $exception) {
+            return [
+                'exit_code' => 1,
+                'output' => $exception->getMessage(),
+            ];
+        }
     }
 
     protected function parseConfigFile(string $path): ?array

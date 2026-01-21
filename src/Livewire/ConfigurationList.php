@@ -75,26 +75,43 @@ class ConfigurationList extends Component implements HasActions, HasForms
                 $filename = $arguments['filename'];
                 // First sync
                 $service = app(SupervisorConfigService::class);
-                if (! $service->syncToSystem($filename)) {
-                    Notification::make()->title('Failed to sync. Deployment aborted.')->danger()->send();
 
-                    return;
-                }
+                try {
+                    $service->syncToSystem($filename);
 
-                // Then deploy/reload
-                $result = $service->deployChanges();
+                    //Check if using secure copy mode
+                    $useSecureCopy = config('supervisor-manager.use_secure_copy', true);
 
-                if ($result['exit_code'] === 0) {
+                    if ($useSecureCopy) {
+                        // Secure copy script already ran supervisorctl reread & update
+                        Notification::make()
+                            ->title('Deployed Successfully')
+                            ->body('Configuration synced and supervisor reloaded via secure copy script.')
+                            ->success()
+                            ->send();
+                    } else {
+                        // Legacy mode - need to manually run supervisorctl commands
+                        $result = $service->deployChanges();
+
+                        if ($result['exit_code'] === 0) {
+                            Notification::make()
+                                ->title('Deployed Successfully')
+                                ->body($result['output'])
+                                ->success()
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->title('Deploy Finished with Errors')
+                                ->body($result['output'])
+                                ->warning()
+                                ->send();
+                        }
+                    }
+                } catch (\Exception $e) {
                     Notification::make()
-                        ->title('Deployed Successfully')
-                        ->body($result['output'])
-                        ->success()
-                        ->send();
-                } else {
-                    Notification::make()
-                        ->title('Deploy Finished with Errors')
-                        ->body($result['output'])
-                        ->warning()
+                        ->title('Deployment Failed')
+                        ->body($e->getMessage())
+                        ->danger()
                         ->send();
                 }
             });
