@@ -2,19 +2,27 @@
 
 namespace Iperamuna\LaravelSupervisorManager\Livewire;
 
-use Livewire\Component;
 use Illuminate\Support\Facades\Redis;
+use Livewire\Component;
 
 class RedisContent extends Component
 {
     public string $pattern = '*';
+
     public array $keys = [];
+
     public ?string $selectedKey = null;
+
     public mixed $keyContent = null;
+
     public ?string $keyType = null;
+
     public int $keyTtl = -1;
+
     public ?string $error = null;
+
     public string $connection = 'default';
+
     public array $connections = [];
 
     // Store the raw content separately if needed, but we mostly display parsed
@@ -24,12 +32,12 @@ class RedisContent extends Component
     {
         $this->connections = array_keys(array_filter(
             config('database.redis', []),
-            fn($value, $key) => is_array($value) && !in_array($key, ['options']),
+            fn ($value, $key) => is_array($value) && ! in_array($key, ['options']),
             ARRAY_FILTER_USE_BOTH
         ));
 
         // Ensure default is selected if available, or first one
-        if (!in_array($this->connection, $this->connections) && count($this->connections) > 0) {
+        if (! in_array($this->connection, $this->connections) && count($this->connections) > 0) {
             $this->connection = $this->connections[0] ?? 'default';
         }
 
@@ -89,7 +97,7 @@ class RedisContent extends Component
                     $this->keyContent = 'Unsupported type or empty';
             }
         } catch (\Exception $e) {
-            $this->error = "Could not load key: " . $e->getMessage();
+            $this->error = 'Could not load key: '.$e->getMessage();
         }
     }
 
@@ -124,7 +132,7 @@ class RedisContent extends Component
     protected function tryParse($content)
     {
         // Recursively try to unserialize or json_decode
-        if (!is_string($content)) {
+        if (! is_string($content)) {
             return $content;
         }
 
@@ -140,6 +148,7 @@ class RedisContent extends Component
             if (is_string($json)) {
                 return $this->tryParse($json);
             }
+
             return $json;
         }
 
@@ -151,11 +160,12 @@ class RedisContent extends Component
         // Bit of a hack to check if string is serialized without generating E_NOTICE
         // and safely handling classes we don't have.
         // We use @ to suppress errors for partial or broken serializations
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             return false;
         }
         if (trim($value) === 'b:0;') {
             $result = false;
+
             return true;
         }
         $length = strlen($value);
@@ -179,6 +189,7 @@ class RedisContent extends Component
 
         if ($parsed !== false) {
             $result = $parsed;
+
             return true;
         }
 

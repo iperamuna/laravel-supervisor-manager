@@ -2,8 +2,8 @@
 
 namespace Iperamuna\LaravelSupervisorManager\Livewire;
 
-use Livewire\Component;
 use Illuminate\Support\Facades\Redis;
+use Livewire\Component;
 
 class RedisDetails extends Component
 {
