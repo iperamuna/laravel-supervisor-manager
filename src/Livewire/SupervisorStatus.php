@@ -45,6 +45,46 @@ class SupervisorStatus extends Component implements HasActions, HasForms
         }
     }
 
+    public function startAllAction(): Action
+    {
+        return Action::make('start_all')
+            ->label('Start All Processes')
+            ->icon('heroicon-m-play')
+            ->color('success')
+            ->iconButton()
+            ->requiresConfirmation()
+            ->modalHeading('Start All Processes')
+            ->modalDescription('Are you sure you want to start all processes?')
+            ->action(function () {
+                try {
+                    SupervisorApi::startAllProcesses(true);
+                    Notification::make()->title('All processes started.')->success()->send();
+                } catch (\Exception $e) {
+                    Notification::make()->title('Failed to start processes.')->body($e->getMessage())->danger()->send();
+                }
+            });
+    }
+
+    public function stopAllAction(): Action
+    {
+        return Action::make('stop_all')
+            ->label('Stop All Processes')
+            ->icon('heroicon-m-stop')
+            ->color('danger')
+            ->iconButton()
+            ->requiresConfirmation()
+            ->modalHeading('Stop All Processes')
+            ->modalDescription('Are you sure you want to stop all processes?')
+            ->action(function () {
+                try {
+                    SupervisorApi::stopAllProcesses(true);
+                    Notification::make()->title('All processes stopped.')->success()->send();
+                } catch (\Exception $e) {
+                    Notification::make()->title('Failed to stop processes.')->body($e->getMessage())->danger()->send();
+                }
+            });
+    }
+
     public function restartAction(): Action
     {
         return Action::make('restart')

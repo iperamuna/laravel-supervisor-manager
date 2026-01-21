@@ -167,6 +167,30 @@ class ConfigurationList extends Component implements HasActions, HasForms
             });
     }
 
+    public function startAction(): Action
+    {
+        return Action::make('start')
+            ->label('Start')
+            ->icon('heroicon-m-play')
+            ->color('success')
+            ->iconButton()
+            ->requiresConfirmation()
+            ->modalHeading('Start Processes')
+            ->modalDescription('Are you sure you want to start all processes in this group?')
+            ->action(function (array $arguments) {
+                $program = $arguments['program'];
+                try {
+                    /** @var SupervisorApiService $api */
+                    $api = app(SupervisorApiService::class);
+                    $api->startProcess($program . ':*', true);
+
+                    Notification::make()->title('Processes started successfully')->success()->send();
+                } catch (\Exception $e) {
+                    Notification::make()->title('Failed to start processes')->body($e->getMessage())->danger()->send();
+                }
+            });
+    }
+
     public function render(): View
     {
         return view('supervisor-manager::livewire.configuration-list', [
