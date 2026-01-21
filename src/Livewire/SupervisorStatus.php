@@ -72,9 +72,6 @@ class SupervisorStatus extends Component implements HasActions, HasForms
             ->icon('heroicon-m-stop')
             ->color('danger')
             ->iconButton()
-            ->requiresConfirmation()
-            ->modalHeading('Stop All Processes')
-            ->modalDescription('Are you sure you want to stop all processes?')
             ->action(function () {
                 try {
                     SupervisorApi::stopAllProcesses(true);

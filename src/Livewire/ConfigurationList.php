@@ -149,9 +149,6 @@ class ConfigurationList extends Component implements HasActions, HasForms
             ->icon('heroicon-m-stop')
             ->color('danger')
             ->iconButton()
-            ->requiresConfirmation()
-            ->modalHeading('Stop Processes')
-            ->modalDescription('Are you sure you want to stop all processes in this group?')
             ->action(function (array $arguments) {
                 $program = $arguments['program'];
                 try {
