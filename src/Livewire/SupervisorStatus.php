@@ -5,17 +5,17 @@ namespace Iperamuna\SupervisorManager\Livewire;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
-use Illuminate\Contracts\View\View;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
+use Illuminate\View\View;
 use Iperamuna\SupervisorManager\Facades\SupervisorApi;
 use Livewire\Component;
 
-class SupervisorStatus extends Component implements HasActions, HasForms
+class SupervisorStatus extends Component implements HasActions, HasSchemas
 {
     use InteractsWithActions;
-    use InteractsWithForms;
+    use InteractsWithSchemas;
 
     public string $status = 'CHECKING';
 
@@ -45,9 +45,9 @@ class SupervisorStatus extends Component implements HasActions, HasForms
         }
     }
 
-    public function startAllAction(): Action
+    public function startAction(): Action
     {
-        return Action::make('start_all')
+        return Action::make('start')
             ->label('Start All Processes')
             ->icon('heroicon-m-play')
             ->color('success')
@@ -57,7 +57,7 @@ class SupervisorStatus extends Component implements HasActions, HasForms
             ->modalDescription('Are you sure you want to start all processes?')
             ->action(function () {
                 try {
-                    SupervisorApi::startAllProcesses(true);
+                    SupervisorApi::start(true);
                     Notification::make()->title('All processes started.')->success()->send();
                 } catch (\Exception $e) {
                     Notification::make()->title('Failed to start processes.')->body($e->getMessage())->danger()->send();
@@ -65,16 +65,16 @@ class SupervisorStatus extends Component implements HasActions, HasForms
             });
     }
 
-    public function stopAllAction(): Action
+    public function stopAction(): Action
     {
-        return Action::make('stop_all')
+        return Action::make('stop')
             ->label('Stop All Processes')
             ->icon('heroicon-m-stop')
             ->color('danger')
             ->iconButton()
             ->action(function () {
                 try {
-                    SupervisorApi::stopAllProcesses(true);
+                    SupervisorApi::stop(true);
                     Notification::make()->title('All processes stopped.')->success()->send();
                 } catch (\Exception $e) {
                     Notification::make()->title('Failed to stop processes.')->body($e->getMessage())->danger()->send();

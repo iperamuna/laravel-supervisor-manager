@@ -28,9 +28,9 @@
         {{ ($this->restartAction) }}
 
         @if($isRunning)
-            {{ ($this->stopAllAction) }}
+            {{ ($this->stopAction) }}
         @else
-            {{ ($this->startAllAction) }}
+            {{ ($this->startAction) }}
         @endif
     </div>
 

@@ -74,6 +74,16 @@ class SupervisorApiService
         return $this->call('supervisor.stopAllProcesses', [$wait]);
     }
 
+    public function start(bool $wait = true): array
+    {
+        return $this->startAllProcesses($wait);
+    }
+
+    public function stop(bool $wait = true): array
+    {
+        return $this->stopAllProcesses($wait);
+    }
+
     public function getState(): array
     {
         return $this->call('supervisor.getState');
