@@ -10,7 +10,9 @@ A powerful **FilamentPHP** panel for managing **Supervisor** processes directly 
 ## ✨ Features
 
 - **Dashboard Overview**: View real-time status of your Supervisor instance and all processes.
-- **Process Management**: Start, stop, and restart individual processes (or groups) with a single click.
+- **Smart Process Control**: 
+    - **Global Controls**: Start, Stop, or Restart **all** processes with a single click from the status widget.
+    - **Contextual Actions**: Configuration cards automatically toggle between Start and Stop actions based on the process state.
 - **Log Viewer**: View `stdout` and `stderr` logs live in a modal (tailing the last 10KB of output).
 - **Configuration Manager**:
     - Manage `.conf` files directly from the UI.
@@ -169,15 +171,17 @@ class User extends Authenticatable implements FilamentUser
 Visit the dashboard at `/supervisor` (or your configured path).
 
 ### Managing Processes
-- The **Dashboard** shows a grid of all monitored processes.
-- Use the **Restart** button on any process card to restart it.
-- Click **LOGS** or **ERR** on a process card to view the latest log output.
+- **Global Control**: The status widget (top right) allows you to **Start All**, **Stop All**, or **Restart** the supervisor daemon.
+- **Smart Toggle**: The status widget automatically hides the "Start All" button if processes are running, keeping the UI clean.
+- **Process Cards**: Use the **Restart** button on any process card to restart it individually.
+- **Logs**: Click **LOGS** or **ERR** on a process card to view the latest log output.
 
 ### Managing Configurations
 - Navigate to the **Configurations** page.
 - **Create** new configurations locally.
 - **Sync** them to the system directory (`/etc/supervisor/conf.d` by default).
 - **Deploy** changes to reload the Supervisor daemon.
+- **Start/Stop**: Each configuration card features a smart **Start/Stop** button that reflects the current running state of the process group.
 
 ## 🛠️ Development
 
