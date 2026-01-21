@@ -19,6 +19,11 @@ class SupervisorManagerInstallCommand extends Command
             '--tag' => 'supervisor-manager-config',
         ]);
 
+        $this->call('vendor:publish', [
+            '--tag' => 'supervisor-manager-assets',
+            '--force' => true,
+        ]);
+
         $panelUrl = text(
             label: 'What is the Supervisor Panel URL?',
             default: 'supervisor',
