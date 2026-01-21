@@ -29,12 +29,12 @@ class SupervisorPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Indigo,
             ])
-            ->discoverResources(in: __DIR__ . '/Filament/Resources', for: 'Iperamuna\\SupervisorManager\\Filament\\Resources')
-            ->discoverPages(in: __DIR__ . '/Filament/Pages', for: 'Iperamuna\\SupervisorManager\\Filament\\Pages')
+            ->discoverResources(in: __DIR__ . '/Filament/Resources', for: 'Iperamuna\\LaravelSupervisorManager\\Filament\\Resources')
+            ->discoverPages(in: __DIR__ . '/Filament/Pages', for: 'Iperamuna\\LaravelSupervisorManager\\Filament\\Pages')
             ->pages([
                 Filament\Pages\SupervisorDashboard::class,
             ])
-            ->discoverWidgets(in: __DIR__ . '/Filament/Widgets', for: 'Iperamuna\\SupervisorManager\\Filament\\Widgets')
+            ->discoverWidgets(in: __DIR__ . '/Filament/Widgets', for: 'Iperamuna\\LaravelSupervisorManager\\Filament\\Widgets')
             ->widgets([
                     // Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
