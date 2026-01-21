@@ -25,11 +25,8 @@
     <!-- Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($configs as $config)
-            <x-supervisor-manager::config-supervisor-card 
-                :config="$config" 
-                :sync-action="$this->syncAction"
-                :deploy-action="$this->deployAction" 
-            />
+            <x-supervisor-manager::config-supervisor-card :config="$config" :sync-action="$this->syncAction"
+                :deploy-action="$this->deployAction" :stop-action="$this->stopAction" />
         @empty
             <div class="col-span-full py-12 text-center text-gray-500">
                 <p>No configurations found.</p>

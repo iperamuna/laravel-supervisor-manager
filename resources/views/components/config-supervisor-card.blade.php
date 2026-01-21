@@ -1,4 +1,4 @@
-@props(['config', 'syncAction', 'deployAction'])
+@props(['config', 'syncAction', 'deployAction', 'stopAction'])
 
 <div
     class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow duration-200 relative group">
@@ -48,6 +48,11 @@
 
             <!-- Deploy & Reload Button -->
             {{ ($deployAction)(['filename' => $config['filename']]) }}
+
+            <!-- Stop Button -->
+            @if (isset($config['is_running']) && $config['is_running'])
+                {{ ($stopAction)(['program' => $config['program'] ?? '']) }}
+            @endif
 
             <a href="{{ \Iperamuna\SupervisorManager\Filament\Pages\SupervisorConfigEdit::getUrl(['file' => $config['filename']]) }}"
                 class="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"

@@ -9,6 +9,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\View\View;
+use Iperamuna\SupervisorManager\Services\SupervisorApiService;
 use Iperamuna\SupervisorManager\Services\SupervisorConfigService;
 use Livewire\Component;
 
@@ -23,6 +24,30 @@ class ConfigurationList extends Component implements HasActions, HasForms
     {
         $service = app(SupervisorConfigService::class);
         $allConfigs = $service->listConfigs();
+
+        // Fetch running processes to determine status
+        try {
+            /** @var SupervisorApiService $api */
+            $api = app(SupervisorApiService::class);
+            $processes = $api->getAllProcessInfo();
+        } catch (\Exception $e) {
+            $processes = [];
+        }
+
+        // Map status
+        foreach ($allConfigs as &$config) {
+            $program = $config['program'] ?? '';
+            $config['is_running'] = false;
+
+            foreach ($processes as $process) {
+                // Check if process belongs to this config group and is RUNNING (state=20)
+                if (($process['group'] ?? '') === $program && ($process['state'] ?? 0) === 20) {
+                    $config['is_running'] = true;
+                    break;
+                }
+            }
+        }
+        unset($config);
 
         if (empty($this->search)) {
             return $allConfigs;
@@ -113,6 +138,31 @@ class ConfigurationList extends Component implements HasActions, HasForms
                         ->body($e->getMessage())
                         ->danger()
                         ->send();
+                }
+            });
+    }
+
+    public function stopAction(): Action
+    {
+        return Action::make('stop')
+            ->label('Stop')
+            ->icon('heroicon-m-stop')
+            ->color('danger')
+            ->iconButton()
+            ->requiresConfirmation()
+            ->modalHeading('Stop Processes')
+            ->modalDescription('Are you sure you want to stop all processes in this group?')
+            ->action(function (array $arguments) {
+                $program = $arguments['program'];
+                try {
+                    /** @var SupervisorApiService $api */
+                    $api = app(SupervisorApiService::class);
+                    // Stop the group (program name is the group name)
+                    $api->stopProcess($program . ':*', true);
+
+                    Notification::make()->title('Processes stopped successfully')->success()->send();
+                } catch (\Exception $e) {
+                    Notification::make()->title('Failed to stop processes')->body($e->getMessage())->danger()->send();
                 }
             });
     }
