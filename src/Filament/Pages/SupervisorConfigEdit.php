@@ -1,6 +1,6 @@
 <?php
 
-namespace Iperamuna\SupervisorManager\Filament\Pages;
+namespace Iperamuna\LaravelSupervisorManager\Filament\Pages;
 
 use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
@@ -13,7 +13,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
-use Iperamuna\SupervisorManager\Services\SupervisorConfigService;
+use Iperamuna\LaravelSupervisorManager\Services\SupervisorConfigService;
 
 class SupervisorConfigEdit extends Page implements HasForms
 {

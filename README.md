@@ -1,11 +1,11 @@
 # Laravel Supervisor Manager
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/iperamuna/supervisor-manager.svg?style=flat-square)](https://packagist.org/packages/iperamuna/supervisor-manager)
-[![Total Downloads](https://img.shields.io/packagist/dt/iperamuna/supervisor-manager.svg?style=flat-square)](https://packagist.org/packages/iperamuna/supervisor-manager)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/iperamuna/laravel-supervisor-manager.svg?style=flat-square)](https://packagist.org/packages/iperamuna/laravel-supervisor-manager)
+[![Total Downloads](https://img.shields.io/packagist/dt/iperamuna/laravel-supervisor-manager.svg?style=flat-square)](https://packagist.org/packages/iperamuna/laravel-supervisor-manager)
 
 A powerful **FilamentPHP** panel for managing **Supervisor** processes directly from your Laravel application.
 
-<img src="https://raw.githubusercontent.com/iperamuna/supervisor-manager/main/art/screenshot.png" alt="Supervisor Manager Dashboard" width="100%">
+<img src="https://raw.githubusercontent.com/iperamuna/laravel-supervisor-manager/main/art/screenshot.png" alt="Supervisor Manager Dashboard" width="100%">
 
 ## ✨ Features
 

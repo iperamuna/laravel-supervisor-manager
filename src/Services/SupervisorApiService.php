@@ -1,6 +1,6 @@
 <?php
 
-namespace Iperamuna\SupervisorManager\Services;
+namespace Iperamuna\LaravelSupervisorManager\Services;
 
 use Exception;
 use GuzzleHttp\Client;

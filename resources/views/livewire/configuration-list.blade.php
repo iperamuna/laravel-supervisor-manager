@@ -16,7 +16,7 @@
         </div>
 
         <x-filament::button tag="a"
-            href="{{ \Iperamuna\SupervisorManager\Filament\Pages\SupervisorConfigEdit::getUrl() }}"
+            href="{{ \Iperamuna\LaravelSupervisorManager\Filament\Pages\SupervisorConfigEdit::getUrl() }}"
             icon="heroicon-m-plus">
             New Config
         </x-filament::button>

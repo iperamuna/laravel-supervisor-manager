@@ -1,6 +1,6 @@
 <?php
 
-namespace Iperamuna\SupervisorManager\Livewire;
+namespace Iperamuna\LaravelSupervisorManager\Livewire;
 
 use Filament\Notifications\Notification;
 use Livewire\Component;
@@ -27,7 +27,7 @@ class LogViewer extends Component
     public function refreshLogs()
     {
         try {
-            $api = app(\Iperamuna\SupervisorManager\Services\SupervisorApiService::class);
+            $api = app(\Iperamuna\LaravelSupervisorManager\Services\SupervisorApiService::class);
             if ($this->type === 'stderr') {
                 $result = $api->tailProcessStderrLog($this->process, $this->offset, $this->length);
             } else {
@@ -45,7 +45,7 @@ class LogViewer extends Component
     public function clearLogs()
     {
         try {
-            $api = app(\Iperamuna\SupervisorManager\Services\SupervisorApiService::class);
+            $api = app(\Iperamuna\LaravelSupervisorManager\Services\SupervisorApiService::class);
             if ($api->clearProcessLogs($this->process)) {
                 $this->content = '';
                 Notification::make()->title('Logs cleared')->success()->send();

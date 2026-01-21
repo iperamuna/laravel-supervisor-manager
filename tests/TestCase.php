@@ -1,9 +1,9 @@
 <?php
 
-namespace Iperamuna\SupervisorManager\Tests;
+namespace Iperamuna\LaravelSupervisorManager\Tests;
 
-use Iperamuna\SupervisorManager\SupervisorManagerServiceProvider;
-use Iperamuna\SupervisorManager\SupervisorPanelProvider;
+use Iperamuna\LaravelSupervisorManager\SupervisorManagerServiceProvider;
+use Iperamuna\LaravelSupervisorManager\SupervisorPanelProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra

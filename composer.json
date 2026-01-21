@@ -1,5 +1,5 @@
 {
-    "name": "iperamuna/supervisor-manager",
+    "name": "iperamuna/laravel-supervisor-manager",
     "description": "A comprehensive FilamentPHP dashboard for managing Supervisor processes and configurations in Laravel applications.",
     "keywords": [
         "laravel",
@@ -14,7 +14,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Iperamuna\\SupervisorManager\\": "src/"
+            "Iperamuna\\LaravelSupervisorManager\\": "src/"
         }
     },
     "authors": [
@@ -38,17 +38,17 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Iperamuna\\SupervisorManager\\Tests\\": "tests/"
+            "Iperamuna\\LaravelSupervisorManager\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Iperamuna\\SupervisorManager\\SupervisorManagerServiceProvider",
-                "Iperamuna\\SupervisorManager\\SupervisorPanelProvider"
+                "Iperamuna\\LaravelSupervisorManager\\SupervisorManagerServiceProvider",
+                "Iperamuna\\LaravelSupervisorManager\\SupervisorPanelProvider"
             ],
             "aliases": {
-                "SupervisorApi": "Iperamuna\\SupervisorManager\\Facades\\SupervisorApi"
+                "SupervisorApi": "Iperamuna\\LaravelSupervisorManager\\Facades\\SupervisorApi"
             }
         }
     },

@@ -1,6 +1,6 @@
 <?php
 
-namespace Iperamuna\SupervisorManager\Commands;
+namespace Iperamuna\LaravelSupervisorManager\Commands;
 
 use Illuminate\Console\Command;
 

@@ -1,5 +1,5 @@
 <?php
 
-use Iperamuna\SupervisorManager\Tests\TestCase;
+use Iperamuna\LaravelSupervisorManager\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

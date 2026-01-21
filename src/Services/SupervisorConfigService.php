@@ -1,6 +1,6 @@
 <?php
 
-namespace Iperamuna\SupervisorManager\Services;
+namespace Iperamuna\LaravelSupervisorManager\Services;
 
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Exception\ProcessFailedException;

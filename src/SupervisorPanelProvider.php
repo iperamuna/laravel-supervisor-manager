@@ -1,6 +1,6 @@
 <?php
 
-namespace Iperamuna\SupervisorManager;
+namespace Iperamuna\LaravelSupervisorManager;
 
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;

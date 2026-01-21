@@ -1,6 +1,6 @@
 <?php
 
-namespace Iperamuna\SupervisorManager;
+namespace Iperamuna\LaravelSupervisorManager;
 
 use Illuminate\Support\ServiceProvider;
 

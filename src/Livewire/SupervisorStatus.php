@@ -1,6 +1,6 @@
 <?php
 
-namespace Iperamuna\SupervisorManager\Livewire;
+namespace Iperamuna\LaravelSupervisorManager\Livewire;
 
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -9,7 +9,7 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Illuminate\View\View;
-use Iperamuna\SupervisorManager\Facades\SupervisorApi;
+use Iperamuna\LaravelSupervisorManager\Facades\SupervisorApi;
 use Livewire\Component;
 
 class SupervisorStatus extends Component implements HasActions, HasSchemas

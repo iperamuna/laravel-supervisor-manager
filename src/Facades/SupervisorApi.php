@@ -1,9 +1,9 @@
 <?php
 
-namespace Iperamuna\SupervisorManager\Facades;
+namespace Iperamuna\LaravelSupervisorManager\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Iperamuna\SupervisorManager\Services\SupervisorApiService;
+use Iperamuna\LaravelSupervisorManager\Services\SupervisorApiService;
 
 /**
  * @method static array getAllProcessInfo()
@@ -18,7 +18,7 @@ use Iperamuna\SupervisorManager\Services\SupervisorApiService;
  * @method static string readProcessStderrLog(string $name, int $offset, int $length)
  * @method static bool clearProcessLogs(string $name)
  *
- * @see \Iperamuna\SupervisorManager\Services\SupervisorApiService
+ * @see \Iperamuna\LaravelSupervisorManager\Services\SupervisorApiService
  */
 class SupervisorApi extends Facade
 {

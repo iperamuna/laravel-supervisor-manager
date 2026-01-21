@@ -58,7 +58,7 @@
                 @endif
             @endif
 
-            <a href="{{ \Iperamuna\SupervisorManager\Filament\Pages\SupervisorConfigEdit::getUrl(['file' => $config['filename']]) }}"
+            <a href="{{ \Iperamuna\LaravelSupervisorManager\Filament\Pages\SupervisorConfigEdit::getUrl(['file' => $config['filename']]) }}"
                 class="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 title="Edit Configuration">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">

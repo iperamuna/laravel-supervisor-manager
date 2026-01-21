@@ -1,6 +1,6 @@
 <?php
 
-namespace Iperamuna\SupervisorManager\Livewire;
+namespace Iperamuna\LaravelSupervisorManager\Livewire;
 
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -9,8 +9,8 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\View\View;
-use Iperamuna\SupervisorManager\Services\SupervisorApiService;
-use Iperamuna\SupervisorManager\Services\SupervisorConfigService;
+use Iperamuna\LaravelSupervisorManager\Services\SupervisorApiService;
+use Iperamuna\LaravelSupervisorManager\Services\SupervisorConfigService;
 use Livewire\Component;
 
 class ConfigurationList extends Component implements HasActions, HasForms

@@ -15,7 +15,7 @@
             </x-filament::button>
 
             <x-filament::button tag="a"
-                href="{{ \Iperamuna\SupervisorManager\Filament\Pages\SupervisorConfigs::getUrl() }}" color="gray">
+                href="{{ \Iperamuna\LaravelSupervisorManager\Filament\Pages\SupervisorConfigs::getUrl() }}" color="gray">
                 Cancel
             </x-filament::button>
         </div>

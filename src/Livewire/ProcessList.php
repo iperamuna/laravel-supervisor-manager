@@ -1,6 +1,6 @@
 <?php
 
-namespace Iperamuna\SupervisorManager\Livewire;
+namespace Iperamuna\LaravelSupervisorManager\Livewire;
 
 use Carbon\Carbon;
 use Filament\Actions\Action;
@@ -10,7 +10,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\View\View;
-use Iperamuna\SupervisorManager\Facades\SupervisorApi;
+use Iperamuna\LaravelSupervisorManager\Facades\SupervisorApi;
 use Livewire\Component;
 
 class ProcessList extends Component implements HasActions, HasForms

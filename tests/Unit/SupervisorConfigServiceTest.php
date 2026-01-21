@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
-use Iperamuna\SupervisorManager\Services\SupervisorConfigService;
+use Iperamuna\LaravelSupervisorManager\Services\SupervisorConfigService;
 
 beforeEach(function () {
     $this->tempDir = sys_get_temp_dir() . '/supervisor_mgr_test_' . uniqid();

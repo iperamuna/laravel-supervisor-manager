@@ -1,6 +1,6 @@
 <?php
 
-namespace Iperamuna\SupervisorManager\Filament\Pages;
+namespace Iperamuna\LaravelSupervisorManager\Filament\Pages;
 
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
