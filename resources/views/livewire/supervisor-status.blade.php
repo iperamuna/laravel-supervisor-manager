@@ -26,8 +26,12 @@
     <!-- Actions -->
     <div class="flex items-center gap-1 border-l border-gray-300 dark:border-gray-600 pl-2 ml-2">
         {{ ($this->restartAction) }}
-        {{ ($this->startAllAction) }}
-        {{ ($this->stopAllAction) }}
+
+        @if($isRunning)
+            {{ ($this->stopAllAction) }}
+        @else
+            {{ ($this->startAllAction) }}
+        @endif
     </div>
 
     <x-filament-actions::modals />
